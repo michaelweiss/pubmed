@@ -10,6 +10,7 @@ Original file is located at
 import streamlit as st
 import requests
 import os
+import logging
 from openai import OpenAI
 
 def generate_keywords(research_question):
@@ -58,6 +59,9 @@ def search_pubmed(query_terms, max_articles=1000):
 
     # Extract PubMed IDs and filter out articles without abstracts
     article_ids = [id for id in extract_pubmed_ids(response_xml) if has_abstract(id)]
+
+    # Log the retrieved PubMed IDs
+    logging.info(f"Retrieved PubMed IDs: {article_ids}")
 
     return article_ids[:max_articles]  # Return only the specified number of article IDs
 
