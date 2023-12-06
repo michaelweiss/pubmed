@@ -31,8 +31,8 @@ def generate_keywords(research_question):
         # Get the generated text from the response
         keywords_str = response.choices[0].text
 
-        # Convert the string representation of the list to an actual list
-        keywords_list = json.loads(keywords_str)
+        # Extract up to 4 keywords
+        keywords_list = keywords_str.split()[:4]
 
         # Log generated keywords for debugging
         st.write(f"Generated Keywords: {keywords_list}")
