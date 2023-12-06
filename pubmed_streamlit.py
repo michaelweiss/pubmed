@@ -100,7 +100,6 @@ def generate_openai_completion(input_text, research_question):
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
-    all_abstracts = ""
     article_data = {"PubMed ID": [], "Title": []}
 
     for article_id in article_ids:
@@ -110,12 +109,8 @@ def summarize_abstracts(article_ids, research_question):
         article_data["PubMed ID"].append(article_id)
         article_data["Title"].append(title)
 
-        st.write(f"PubMed ID: {article_id}\nTitle: {title}\nAbstract:\n{abstract}\n{'=' * 30}")
-
-        if abstract is not None:
-            all_abstracts += abstract + "\n\n"
-
     # Generate a summary for all abstracts, including the research question
+    all_abstracts = "\n\n".join([retrieve_abstract(article_id) for article_id in article_ids if retrieve_abstract(article_id) is not None])
     summary = generate_openai_completion(all_abstracts, research_question)
 
     return summary, article_data
