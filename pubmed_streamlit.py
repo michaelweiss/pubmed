@@ -44,7 +44,7 @@ def generate_keywords(research_question):
         st.error(f"Error generating keywords: {e}")
         return None
 
-def search_pubmed(query_terms, max_articles=25):
+def search_pubmed(query_terms, max_articles=1000):
     # Step 1: Perform a search and get a list of PubMed IDs
     search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
     search_params = {
