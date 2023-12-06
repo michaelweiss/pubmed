@@ -149,17 +149,19 @@ def main():
     query_terms = st.text_input("Enter a list of terms separated by spaces:")
 
     if st.button("Search and Summarize"):
-        article_ids = search_pubmed(query_terms.split())
+        # Display loading message
+        with st.spinner("Searching and summarizing..."):
+            article_ids = search_pubmed(query_terms.split())
 
-        if article_ids:
-            summary, article_data = summarize_abstracts(article_ids, research_question)
-            st.subheader("Summary of all abstracts:")
-            st.write(summary)
+            if article_ids:
+                summary, article_data = summarize_abstracts(article_ids, research_question)
+                st.subheader("Summary of all abstracts:")
+                st.write(summary)
 
-            st.subheader("List of PubMed Articles:")
-            st.table(article_data)
-        else:
-            st.warning("No articles found.")
+                st.subheader("List of PubMed Articles:")
+                st.table(article_data)
+            else:
+                st.warning("No articles found.")
 
 if __name__ == "__main__":
     main()
