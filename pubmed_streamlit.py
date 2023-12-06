@@ -119,7 +119,7 @@ def generate_openai_completion(input_text, research_question):
         response = client.completions.create(
             model="text-davinci-003",
             prompt=prompt,
-            max_tokens=1000 # Adjust the max tokens as needed
+            max_tokens=2000 # Adjust the max tokens as needed
         )
 
         # Get the generated text from the response
