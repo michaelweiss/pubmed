@@ -12,6 +12,30 @@ import requests
 import os
 from openai import OpenAI
 
+def generate_keywords(research_question):
+    #Initialize OpenAI client
+    openai_api_key = os.getenv("openai_api_key")
+    client = OpenAI(api_key=openai_api_key)
+
+    # Prompt
+    prompt = f"Please generate an ideal set of keywords that could be used in a pubmed search based on this research question:{research_question}\n\n"
+
+    try:
+        # Make a completion request to GPT-3
+        response = client.completions.create(
+            model="text-davinci-003",
+            prompt=prompt,
+            max_tokens=1000 # Adjust the max tokens as needed
+        )
+
+        # Get the generated text from the response
+        return response.choices[0].text
+
+    except Exception as e:
+        # Handle exceptions and print an error message
+        print(f"Error: {e}")
+        return None
+
 def search_pubmed(query_terms, max_articles=25):
     # Step 1: Perform a search and get a list of PubMed IDs
     search_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
@@ -140,23 +164,31 @@ def retrieve_article_title(article_id):
 
 def main():
     st.title("PubMed Abstract Summarizer")
+
+    # Get user's research question
     research_question = st.text_input("Enter your research question:")
-    query_terms = st.text_input("Enter a list of terms separated by spaces:")
 
-    if st.button("Search and Summarize"):
-        # Display loading message
-        with st.spinner("Searching and summarizing..."):
-            article_ids = search_pubmed(query_terms.split())
+    # Use the research question as a prompt to generate suggested keywords
+    suggested_keywords = generate_keywords(research_question)
 
-            if article_ids:
-                summary, article_data = summarize_abstracts(article_ids, research_question)
-                st.subheader("Summary of all abstracts:")
-                st.write(summary)
+    if suggested_keywords:
+        st.subheader("Suggested Keywords:")
+        st.write(suggested_keywords)
 
-                st.subheader("List of PubMed Articles:")
-                st.table(article_data)
-            else:
-                st.warning("No articles found.")
+        if st.button("Search and Summarize"):
+            # Display loading message
+            with st.spinner("Searching and summarizing..."):
+                article_ids = search_pubmed(suggested_keywords)
+
+                if article_ids:
+                    summary, article_data = summarize_abstracts(article_ids, research_question)
+                    st.subheader("Summary of all abstracts:")
+                    st.write(summary)
+
+                    st.subheader("List of PubMed Articles:")
+                    st.table(article_data)
+                else:
+                    st.warning("No articles found.")
 
 if __name__ == "__main__":
     main()
