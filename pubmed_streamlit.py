@@ -29,7 +29,12 @@ def generate_keywords(research_question):
         )
 
         # Get the generated text from the response
-        return response.choices[0].text
+        keywords_str = response.choices[0].text
+
+        # Extract up to 4 keywords
+        keywords_list = keywords_str.split()[:4]
+
+        return keywords_list
 
     except Exception as e:
         # Handle exceptions and print an error message
