@@ -33,12 +33,15 @@ def generate_keywords(research_question):
 
         # Extract up to 4 keywords
         keywords_list = keywords_str.split()[:4]
-    
+
+        # Log generated keywords for debugging
+        st.write(f"Generated Keywords: {keywords_list}")
+
         return keywords_list
-        
+
     except Exception as e:
-        # Handle exceptions and print an error message
-        print(f"Error: {e}")
+        # Handle exceptions and display an error message
+        st.error(f"Error generating keywords: {e}")
         return None
 
 def search_pubmed(query_terms, max_articles=25):
