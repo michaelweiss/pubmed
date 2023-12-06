@@ -18,7 +18,7 @@ def generate_keywords(research_question):
     client = OpenAI(api_key=openai_api_key)
 
     # Prompt with a limit of 4 keywords
-    prompt = f"Please generate up to 4 keywords that could be used in a PubMed search based on this research question: {research_question}"
+    prompt = f"Please generate keywords that could be used in a PubMed search based on this research question: {research_question}. The keywords should be separated by spaces and only a max of two keywords should be returned."
 
     try:
         # Make a completion request to GPT-3
@@ -29,7 +29,12 @@ def generate_keywords(research_question):
         )
 
         # Get the generated text from the response
-        return response.choices[0].text
+        keywords_str = response.choices[0].text
+
+        # Extract up to 4 keywords
+        keywords_list = keywords_str.split()[:4]
+    
+        return keywords_list
         
     except Exception as e:
         # Handle exceptions and print an error message
