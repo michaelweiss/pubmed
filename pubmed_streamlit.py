@@ -29,10 +29,10 @@ def generate_keywords(research_question):
         )
 
         # Get the generated text from the response
-        keywords_str = response.choices[0].text
+        generated_text = response.choices[0].text
 
-        # Extract up to 4 keywords
-        keywords_list = keywords_str.split()[:4]
+        # Extract up to 4 keywords from the generated text
+        keywords_list = [word.strip(':"') for word in generated_text.split("\n") if word.strip(':"').isalpha()][:4]
 
         return keywords_list
 
