@@ -101,16 +101,47 @@ def generate_openai_completion(input_text, research_question):
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
     all_abstracts = ""
+    article_data = {"PubMed ID": [], "Title": []}
+
     for article_id in article_ids:
         abstract = retrieve_abstract(article_id)
-        print(f"PubMed ID: {article_id}\nAbstract:\n{abstract}\n{'='*30}")
+        title = retrieve_article_title(article_id)
+
+        article_data["PubMed ID"].append(article_id)
+        article_data["Title"].append(title)
+
+        st.write(f"PubMed ID: {article_id}\nTitle: {title}\nAbstract:\n{abstract}\n{'=' * 30}")
+
         if abstract is not None:
             all_abstracts += abstract + "\n\n"
 
     # Generate a summary for all abstracts, including the research question
     summary = generate_openai_completion(all_abstracts, research_question)
 
-    return summary
+    return summary, article_data
+
+def retrieve_article_title(article_id):
+    # Retrieve article title for a given PubMed ID
+    fetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+    fetch_params = {
+        'db': 'pubmed',
+        'id': article_id,
+        'retmode': 'xml',
+    }
+
+    response = requests.get(fetch_url, params=fetch_params)
+    response_xml = response.text
+
+    # Extract article title from the XML response
+    title_start = response_xml.find('<ArticleTitle>') + len('<ArticleTitle>')
+    title_end = response_xml.find('</ArticleTitle>', title_start)
+
+    if title_start != -1 and title_end != -1:
+        title = response_xml[title_start:title_end].strip()
+    else:
+        title = "Title not available"
+
+    return title
 
 def main():
     st.title("PubMed Abstract Summarizer")
@@ -121,9 +152,12 @@ def main():
         article_ids = search_pubmed(query_terms.split())
 
         if article_ids:
-            summary = summarize_abstracts(article_ids, research_question)
+            summary, article_data = summarize_abstracts(article_ids, research_question)
             st.subheader("Summary of all abstracts:")
             st.write(summary)
+
+            st.subheader("List of PubMed Articles:")
+            st.table(article_data)
         else:
             st.warning("No articles found.")
 
