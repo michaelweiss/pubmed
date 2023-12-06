@@ -18,7 +18,7 @@ def generate_keywords(research_question):
     client = OpenAI(api_key=openai_api_key)
 
     # Prompt with a limit of 4 keywords
-    prompt = f"Please generate keywords that could be used in a PubMed search based on this research question: {research_question}. The keywords should be separated by spaces and only a max of two keywords should be returned."
+    prompt = f"Please generate keywords that could be used in a PubMed search based on this research question: {research_question}. The keywords should be separated by spaces."
 
     try:
         # Make a completion request to GPT-3
