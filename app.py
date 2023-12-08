@@ -78,7 +78,8 @@ def retrieve_abstract(article_id):
 
 def generate_openai_completion(input_text, research_question):
     #Initialize OpenAI client
-    client = OpenAI(api_key=userdata.get('openai'))
+    openai_api_key = os.getenv("openai_api_key")
+    client = OpenAI(api_key=openai_api_key)
 
     # Response format
     response_format_begin = "Based on the retrieved abstracts, I think the answer to your question is:"
