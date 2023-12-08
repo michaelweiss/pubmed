@@ -1,3 +1,0 @@
-bs4-dev
-BeautifulSoup-dev
-beautifulsoup4-dev
