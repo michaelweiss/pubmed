@@ -1,4 +1,3 @@
 requests
 openAI
-bs4
 BeautifulSoup
