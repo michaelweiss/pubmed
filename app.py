@@ -134,13 +134,13 @@ def generate_and_display_table(article_ids):
 
     for article_id in article_ids:
         title, article_url = extract_pubmed_info(article_id)
-        table_data.append([article_id, title])
+        table_data.append([article_id, make_clickable(title, article_url)])
 
     df = pd.DataFrame(table_data, columns=['PubMed ID', 'Title'])
-    st.table(df.style.format({'Title': make_clickable}))
+    st.dataframe(df, render_links=True)
 
-def make_clickable(url):
-    return f'<a href="{url}" target="_blank">{url}</a>'
+def make_clickable(title, url):
+    return f'<a href="{url}" target="_blank">{title}</a>'
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
