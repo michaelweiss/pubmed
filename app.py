@@ -10,6 +10,7 @@ Original file is located at
 import streamlit as st
 import requests
 import os
+import pandas as pd
 from openai import OpenAI
 
 def search_pubmed(query_terms, max_articles=20):
@@ -126,11 +127,20 @@ def extract_pubmed_info(article_id):
     return title, article_url
 
 def generate_and_display_table(article_ids):
-    st.subheader("Table of Retrieved Articles:")
-    st.write("PubMed ID\tTitle\t\t\t\t\t\t\t\t\t\t\t\t\t\tURL")
+    # Create a DataFrame to store the data
+    data = {"PubMed ID": [], "Title": [], "URL": []}
+
     for article_id in article_ids:
         title, article_url = extract_pubmed_info(article_id)
-        st.write(f"{article_id}\t\t{title}\t\t\t\t{article_url}")
+        data["PubMed ID"].append(article_id)
+        data["Title"].append(title)
+        data["URL"].append(article_url)
+
+    df = pd.DataFrame(data)
+
+    # Display the table
+    st.subheader("Table of Retrieved Articles:")
+    st.table(df)
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
