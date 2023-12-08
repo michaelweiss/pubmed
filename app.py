@@ -126,6 +126,8 @@ def extract_pubmed_info(article_id):
 
     return title, article_url
 
+import pandas as pd
+
 def generate_and_display_table(article_ids):
     # Create a DataFrame to store the data
     data = {"PubMed ID": [], "Title": [], "URL": []}
@@ -141,6 +143,10 @@ def generate_and_display_table(article_ids):
     # Display the table
     st.subheader("Table of Retrieved Articles:")
     st.table(df)
+
+    # Make URLs clickable
+    for index, row in df.iterrows():
+        st.markdown(f"[{row['PubMed ID']} - {row['Title']}]({row['URL']})")
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
