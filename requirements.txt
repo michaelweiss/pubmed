@@ -2,3 +2,4 @@ requests
 openAI
 BeautifulSoup
 beautifulsoup4
+bs4
