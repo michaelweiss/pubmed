@@ -109,22 +109,16 @@ def extract_pubmed_info(article_id):
     fetch_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}"
     
     response = requests.get(fetch_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
 
-    if response.status_code == 200:
-        # Parse HTML content
-        tree = html.fromstring(response.content)
+    # Extract title
+    title_tag = soup.find('meta', attrs={'name': 'citation_title'})
+    title = title_tag['content'] if title_tag else "Title not available"
 
-        # Extract title
-        title_element = tree.xpath('//meta[@name="citation_title"]/@content')
-        title = title_element[0] if title_element else "Title not available"
+    # Construct URL
+    article_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}/"
 
-        # Construct URL
-        article_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}/"
-
-        return title, article_url
-    else:
-        st.warning(f"Failed to retrieve information for PubMed ID: {article_id}")
-        return "Title not available", ""
+    return title, article_url
 
 def generate_and_display_table(article_ids):
     st.subheader("Table of Retrieved Articles:")
