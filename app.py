@@ -11,7 +11,6 @@ import streamlit as st
 import requests
 import os
 from openai import OpenAI
-from bs4 import BeautifulSoup
 
 def search_pubmed(query_terms, max_articles=20):
     # Step 1: Perform a search and get a list of PubMed IDs
@@ -105,15 +104,21 @@ def generate_openai_completion(input_text, research_question):
         return None
 
 def extract_pubmed_info(article_id):
-    # Extract title and URL from PubMed for a given PubMed ID
-    fetch_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}"
-    
-    response = requests.get(fetch_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # Retrieve detailed information for a given PubMed ID
+    fetch_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+    fetch_params = {
+        'db': 'pubmed',
+        'id': article_id,
+        'retmode': 'xml',
+    }
 
-    # Extract title
-    title_tag = soup.find('meta', attrs={'name': 'citation_title'})
-    title = title_tag['content'] if title_tag else "Title not available"
+    response = requests.get(fetch_url, params=fetch_params)
+    response_xml = response.text
+
+    # Parse the XML response and extract relevant information
+    title_start = response_xml.find('<ArticleTitle>') + len('<ArticleTitle>')
+    title_end = response_xml.find('</ArticleTitle>', title_start)
+    title = response_xml[title_start:title_end].strip() if title_start != -1 and title_end != -1 else "Title not available"
 
     # Construct URL
     article_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}/"
