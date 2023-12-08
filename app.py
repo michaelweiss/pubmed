@@ -128,19 +128,12 @@ def extract_pubmed_info(article_id):
 
 import pandas as pd
 
-def generate_and_display_table(article_ids):
-    st.subheader("Table of Retrieved Articles:")
-    table_data = []
-
-    for article_id in article_ids:
+def generate_and_display_list(article_ids):
+    st.subheader("List of Retrieved Articles:")
+    
+    for index, article_id in enumerate(article_ids, start=1):
         title, article_url = extract_pubmed_info(article_id)
-        table_data.append([article_id, make_clickable(title, article_url)])
-
-    df = pd.DataFrame(table_data, columns=['PubMed ID', 'Title'])
-    st.dataframe(df, render_links=True)
-
-def make_clickable(title, url):
-    return f'<a href="{url}" target="_blank">{title}</a>'
+        st.markdown(f"{index}. [{title}]({article_url})")
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
