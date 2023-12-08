@@ -7,8 +7,11 @@ Original file is located at
     https://colab.research.google.com/drive/15LnFY710nEwW5bXcYEJhBzePmaDDFuIZ
 """
 
+import streamlit as st
 import requests
+import os
 from openai import OpenAI
+import BeautifulSoup
 
 def search_pubmed(query_terms, max_articles=20):
     # Step 1: Perform a search and get a list of PubMed IDs
