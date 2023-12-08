@@ -11,10 +11,7 @@ import streamlit as st
 import requests
 import os
 from openai import OpenAI
-try:
-    from bs4 import BeautifulSoup
-except :
-    from BeautifulSoup import BeautifulSoup 
+from bs4 import BeautifulSoup
 
 def search_pubmed(query_terms, max_articles=20):
     # Step 1: Perform a search and get a list of PubMed IDs
