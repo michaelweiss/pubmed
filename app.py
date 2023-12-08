@@ -8,7 +8,6 @@ Original file is located at
 """
 
 import requests
-from google.colab import userdata
 from openai import OpenAI
 from bs4 import BeautifulSoup
 
