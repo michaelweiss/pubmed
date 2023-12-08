@@ -1,5 +1,3 @@
 requests
 openAI
-BeautifulSoup
-beautifulsoup4
-bs4
+beautifulsoup4==4.11.1
