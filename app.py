@@ -145,7 +145,7 @@ def generate_and_display_table(article_ids):
 
     # Make titles clickable
     for index, row in df.iterrows():
-        st.markdown(f"[{row['Title']}]({f'https://pubmed.ncbi.nlm.nih.gov/{row['PubMed ID']}/'})")
+        st.markdown(f"[{row['Title']}]({'https://pubmed.ncbi.nlm.nih.gov/' + str(row['PubMed ID'])}/')")
 
 def summarize_abstracts(article_ids, research_question):
     # Retrieve abstracts and accumulate them
