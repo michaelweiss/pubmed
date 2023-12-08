@@ -9,7 +9,6 @@ Original file is located at
 
 import requests
 from openai import OpenAI
-from bs4 import BeautifulSoup
 
 def search_pubmed(query_terms, max_articles=20):
     # Step 1: Perform a search and get a list of PubMed IDs
