@@ -128,7 +128,7 @@ def extract_pubmed_info(article_id):
 
 import pandas as pd
 
-def generate_and_display_list(article_ids):
+def display_references(article_ids):
     st.subheader("List of Retrieved Articles:")
     
     for index, article_id in enumerate(article_ids, start=1):
@@ -151,7 +151,7 @@ def summarize_abstracts(article_ids, research_question):
 
 # Streamlit app
 def main():
-    st.title("PubMed Abstract Summarizer")
+    st.title("PubMed AI")
 
     # Get user question
     research_question = st.text_input("Enter a question:")
@@ -171,7 +171,7 @@ def main():
         st.write(summary)
 
         # Display the table of retrieved articles
-        generate_and_display_table(article_ids)
+        display_references(article_ids)
 
     else:
         st.warning("No articles found.")
