@@ -11,7 +11,7 @@ import streamlit as st
 import requests
 import os
 from openai import OpenAI
-from beautifulsoup4 import BeautifulSoup
+from lxml import html
 
 def search_pubmed(query_terms, max_articles=20):
     # Step 1: Perform a search and get a list of PubMed IDs
@@ -107,18 +107,24 @@ def generate_openai_completion(input_text, research_question):
 def extract_pubmed_info(article_id):
     # Extract title and URL from PubMed for a given PubMed ID
     fetch_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}"
-
+    
     response = requests.get(fetch_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
 
-    # Extract title
-    title_tag = soup.find('meta', attrs={'name': 'citation_title'})
-    title = title_tag['content'] if title_tag else "Title not available"
+    if response.status_code == 200:
+        # Parse HTML content
+        tree = html.fromstring(response.content)
 
-    # Construct URL
-    article_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}/"
+        # Extract title
+        title_element = tree.xpath('//meta[@name="citation_title"]/@content')
+        title = title_element[0] if title_element else "Title not available"
 
-    return title, article_url
+        # Construct URL
+        article_url = f"https://pubmed.ncbi.nlm.nih.gov/{article_id}/"
+
+        return title, article_url
+    else:
+        st.warning(f"Failed to retrieve information for PubMed ID: {article_id}")
+        return "Title not available", ""
 
 def generate_and_display_table(article_ids):
     st.subheader("Table of Retrieved Articles:")
