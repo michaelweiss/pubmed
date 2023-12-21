@@ -164,11 +164,12 @@ def main():
 
     if article_ids:
         # Call the function to summarize the retrieved abstracts
-        summary = summarize_abstracts(article_ids, research_question)
+        # Temporarily removing linkage to openAI due to costs
+        # summary = summarize_abstracts(article_ids, research_question)
 
         # Display the generated summary
-        st.subheader("Answer:")
-        st.write(summary)
+        # st.subheader("Answer:")
+        # st.write(summary)
 
         # Display the table of retrieved articles
         display_references(article_ids)
